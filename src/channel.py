@@ -3,7 +3,7 @@ import json
 from googleapiclient.discovery import build
 
 class Channel:
-    api_key = 'AIzaSyBuuxluP5Z8a_M7xb-yUKSu6cxzWKGVius'  # Замените на ваш ключ
+    api_key = 'AIzaSyBuuxluP5Z8a_M7xb-yUKSu6cxzWKGVius'
 
     def __init__(self, channel_id):
         self.channel_id = channel_id

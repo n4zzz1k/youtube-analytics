@@ -20,21 +20,61 @@ class Channel:
 
             self.title = channel_info['title']
             self.description = channel_info['description']
-            self.view_count = statistics['viewCount']
-            self.subscriber_count = statistics['subscriberCount']
-            self.video_count = statistics['videoCount']
+            self.view_count = int(statistics['viewCount'])
+            self.subscriber_count = int(statistics['subscriberCount'])
+            self.video_count = int(statistics['videoCount'])
 
             self.url = f"https://www.youtube.com/channel/{self.channel_id}"
         else:
             raise ValueError("Channel not found or API key is invalid.")
 
-    def print_info(self):
-        print(f"Title: {self.title}")
-        print(f"Description: {self.description}")
-        print(f"View Count: {self.view_count}")
-        print(f"Subscriber Count: {self.subscriber_count}")
-        print(f"Video Count: {self.video_count}")
-        print(f"URL: {self.url}")
+    def __repr__(self):
+        return f"Channel('{self.title}', {self.subscriber_count})"
+
+    def __str__(self):
+        return f"{self.title} ({self.url})"
+
+    def __add__(self, other):
+        if isinstance(other, Channel):
+            return self.subscriber_count + other.subscriber_count
+        else:
+            raise TypeError("Unsupported operand type(s) for +: 'Channel' and '{}'".format(type(other).__name__))
+
+    def __sub__(self, other):
+        if isinstance(other, Channel):
+            return self.subscriber_count - other.subscriber_count
+        else:
+            raise TypeError("Unsupported operand type(s) for -: 'Channel' and '{}'".format(type(other).__name__))
+
+    def __eq__(self, other):
+        if isinstance(other, Channel):
+            return self.subscriber_count == other.subscriber_count
+        else:
+            return False
+
+    def __lt__(self, other):
+        if isinstance(other, Channel):
+            return self.subscriber_count < other.subscriber_count
+        else:
+            raise TypeError("Unsupported operand type(s) for <: 'Channel' and '{}'".format(type(other).__name__))
+
+    def __le__(self, other):
+        if isinstance(other, Channel):
+            return self.subscriber_count <= other.subscriber_count
+        else:
+            raise TypeError("Unsupported operand type(s) for <=: 'Channel' and '{}'".format(type(other).__name__))
+
+    def __gt__(self, other):
+        if isinstance(other, Channel):
+            return self.subscriber_count > other.subscriber_count
+        else:
+            raise TypeError("Unsupported operand type(s) for >: 'Channel' and '{}'".format(type(other).__name__))
+
+    def __ge__(self, other):
+        if isinstance(other, Channel):
+            return self.subscriber_count >= other.subscriber_count
+        else:
+            raise TypeError("Unsupported operand type(s) for >=: 'Channel' and '{}'".format(type(other).__name__))
 
     @classmethod
     def get_service(cls):
@@ -52,12 +92,3 @@ class Channel:
         }
         with open(filename, 'w') as json_file:
             json.dump(data, json_file)
-
-if __name__ == '__main__':
-    moscowpython = Channel('UC-OVMPlMA3-YCIeg4z5z23A')
-    moscowpython.print_info()
-
-    service = Channel.get_service()
-    print(service.channels().list(part='snippet,statistics', id=moscowpython.channel_id).execute())
-
-    moscowpython.to_json('moscowpython.json')
